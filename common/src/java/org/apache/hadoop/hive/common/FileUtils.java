@@ -37,6 +37,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -77,7 +79,15 @@ public final class FileUtils {
     @Override
     public boolean accept(Path p) {
       String name = p.getName();
-      return !name.startsWith("_") && !name.startsWith(".");
+      boolean isHudiMeta = name.startsWith(".hoodie");
+      boolean isHudiLog = false;
+      Pattern LOG_FILE_PATTERN = Pattern.compile("\\.(.*)_(.*)\\.(.*)\\.([0-9]*)(_(([0-9]*)-([0-9]*)-([0-9]*)))?");
+      Matcher matcher = LOG_FILE_PATTERN.matcher(name);
+      if (matcher.find()) {
+        isHudiLog = true;
+      }
+      boolean isHudiFile = isHudiLog || isHudiMeta;
+      return (!name.startsWith("_") && !name.startsWith(".")) || isHudiFile;
     }
   };
 
