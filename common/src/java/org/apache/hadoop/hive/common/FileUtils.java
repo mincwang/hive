@@ -79,6 +79,7 @@ public final class FileUtils {
     @Override
     public boolean accept(Path p) {
       String name = p.getName();
+      LOG.debug("Accept path is " + name);
       boolean isHudiMeta = name.startsWith(".hoodie");
       boolean isHudiLog = false;
       Pattern LOG_FILE_PATTERN = Pattern.compile("\\.(.*)_(.*)\\.(.*)\\.([0-9]*)(_(([0-9]*)-([0-9]*)-([0-9]*)))?");
@@ -87,6 +88,10 @@ public final class FileUtils {
         isHudiLog = true;
       }
       boolean isHudiFile = isHudiLog || isHudiMeta;
+      LOG.debug("IsHudiLog value is " + isHudiLog);
+      LOG.debug("IsHudiMeta value is " + isHudiMeta);
+      LOG.debug("IsHudiFile value is " + isHudiFile);
+      LOG.debug("This method return value is " + ((!name.startsWith("_") && !name.startsWith(".")) || isHudiFile));
       return (!name.startsWith("_") && !name.startsWith(".")) || isHudiFile;
     }
   };
